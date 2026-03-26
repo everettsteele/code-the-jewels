@@ -1,0 +1,6 @@
+feature trim, upper from "bk:text"
+
+jewel line = "  code the jewels  "
+jewel clean = line |> trim |> upper
+
+talk clean

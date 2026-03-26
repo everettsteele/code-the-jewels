@@ -1,0 +1,11 @@
+feature upper from "bk:text"
+feature first, last from "atl:data"
+
+jewel cities = ["Atlanta", "Brooklyn", "Chicago"]
+
+verse announce(city) {
+  send city |> upper
+}
+
+talk announce(first(cities))
+talk announce(last(cities))

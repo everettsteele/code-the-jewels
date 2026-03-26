@@ -1,0 +1,12 @@
+feature trim from "bk:text"
+feature words from "bk:parse"
+feature count from "atl:data"
+
+jewel bars = "  rtj from atlanta to brooklyn  "
+
+jewel total = duo(bars) {
+  mike: trim |> words
+  el: count
+}
+
+talk total

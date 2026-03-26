@@ -1,0 +1,22 @@
+{
+  "name": "code-the-jewels",
+  "version": "0.1.0",
+  "description": "A stylized programming language inspired by Run The Jewels. .rtj files compile to JavaScript.",
+  "bin": {
+    "rtj": "./dist/cli.js"
+  },
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/cli.ts",
+    "test": "node dist/tests/basic.test.js"
+  },
+  "keywords": ["rtj", "code-the-jewels", "programming-language"],
+  "license": "MIT",
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.2"
+  }
+}

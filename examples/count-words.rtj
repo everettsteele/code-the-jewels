@@ -1,0 +1,12 @@
+feature trim, lower from "bk:text"
+feature words from "bk:parse"
+feature countBy from "atl:data"
+
+jewel verse = "run the jewels run the jewels run"
+
+jewel freq = duo(verse) {
+  mike: trim |> lower |> words
+  el: countBy
+}
+
+talk freq
