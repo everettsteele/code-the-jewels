@@ -4,24 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Code The Jewels — .rtj</title>
-<meta name="description" content="A programming language inspired by Run The Jewels. .rtj files. Transpiles to JavaScript. CLI, REPL, and a standard library named after cities.">
+<meta name="description" content="A programming language built like Run The Jewels makes music. Two cities. Two voices. One compiler. .rtj files transpile to JavaScript.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,400&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:       #FFFFFF;
-  --surface:  #F7F5F3;
-  --surface2: #F0EDEA;
-  --border:   #E4E0DC;
-  --text:     #111010;
-  --muted:    #888078;
-  --pink:     #E8153F;
-  --pink-dim: rgba(232,21,63,0.07);
-  --pink-hi:  rgba(232,21,63,0.14);
-  --pink-border: rgba(232,21,63,0.25);
-  --green:    #1A7A3F;
-  --amber:    #8A6200;
-  --blue:     #1660A8;
+  --bg:      #000000;
+  --surface: #0D0D0D;
+  --surface2:#141414;
+  --border:  rgba(255,255,255,0.08);
+  --text:    #FFFFFF;
+  --muted:   #808080;
+  --dim:     #444444;
+  --pink:    #FF1F6E;
+  --pink-dim:rgba(255,31,110,0.1);
+  --pink-border:rgba(255,31,110,0.25);
+  --gold:    #FFE600;
+  --gold-dim:rgba(255,230,0,0.08);
+  --green:   #00CC66;
+  --blue:    #4499FF;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -41,13 +42,7 @@ body::before {
   content: '';
   position: fixed;
   inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 3px,
-    rgba(0,0,0,0.025) 3px,
-    rgba(0,0,0,0.025) 4px
-  );
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.2) 2px, rgba(0,0,0,0.2) 4px);
   pointer-events: none;
   z-index: 9999;
 }
@@ -56,87 +51,65 @@ nav {
   position: sticky;
   top: 0;
   z-index: 200;
-  background: rgba(255,255,255,0.94);
+  background: rgba(0,0,0,0.92);
   backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
-  padding: 0 2.5rem;
+  padding: 0 2rem;
   height: 52px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.nav-logo {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text);
-  text-decoration: none;
-  letter-spacing: 0.01em;
-}
-.nav-logo .ext { color: var(--pink); }
+.nav-logo { font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500; color: var(--text); text-decoration: none; }
+.nav-logo .brace { color: var(--pink); }
+.nav-logo .ext   { color: var(--gold); }
 
-.nav-links { display: flex; gap: 2.2rem; }
-.nav-links a {
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--muted);
-  text-decoration: none;
-  transition: color 0.15s;
-}
-.nav-links a:hover { color: var(--pink); }
+.nav-links { display: flex; gap: 2rem; }
+.nav-links a { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.15s; }
+.nav-links a:hover { color: var(--gold); }
 
 #hero {
-  padding: 80px 2.5rem 72px;
-  border-bottom: 2px solid var(--text);
+  padding: 80px 2rem 72px;
   text-align: center;
+  border-bottom: 3px solid var(--pink);
   position: relative;
+  overflow: hidden;
 }
 
 #hero::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(232,21,63,0.05) 0%, transparent 70%);
+  top: -60px; left: 50%;
+  transform: translateX(-50%);
+  width: 900px; height: 500px;
+  background: radial-gradient(ellipse at center, rgba(255,31,110,0.12) 0%, transparent 65%);
   pointer-events: none;
 }
 
-.hero-mark {
-  display: block;
-  font-size: 5.5rem;
-  line-height: 1;
-  margin-bottom: 2rem;
-  letter-spacing: -0.01em;
-}
-.hero-mark .brace { color: var(--pink); }
+.hero-mark { display: block; font-size: 5rem; line-height: 1; margin-bottom: 2rem; position: relative; }
+.hero-mark .brace { color: var(--pink); font-weight: 500; }
+.hero-mark .ext   { color: var(--gold); font-size: 3rem; vertical-align: middle; }
 
 h1.hero-title {
   font-family: 'Anton', sans-serif;
-  font-size: clamp(3.8rem, 11vw, 9.5rem);
+  font-size: clamp(4.5rem, 13vw, 11rem);
   font-weight: 400;
-  line-height: 1;
+  line-height: 0.9;
   text-transform: uppercase;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.02em;
   color: var(--text);
   white-space: nowrap;
 }
 
-.hero-rule {
-  width: 48px;
-  height: 3px;
-  background: var(--pink);
-  margin: 1.8rem auto;
-}
+.hero-cities { margin-top: 1.2rem; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+.hero-cities .city-bk  { color: var(--pink); }
+.hero-cities .city-atl { color: var(--gold); }
 
-.hero-sub {
-  font-size: 13px;
-  color: var(--muted);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: 2.4rem;
-}
-.hero-sub strong { color: var(--pink); font-weight: 400; }
+.hero-rule { width: 64px; height: 3px; margin: 1.8rem auto; background: linear-gradient(90deg, var(--pink), var(--gold)); }
+
+.hero-tagline { font-family: 'IBM Plex Sans', sans-serif; font-size: 16px; color: var(--muted); margin-bottom: 2.4rem; letter-spacing: 0.02em; }
+.hero-tagline strong { color: var(--text); font-weight: 500; }
 
 .install-btn {
   display: inline-flex;
@@ -145,7 +118,7 @@ h1.hero-title {
   background: var(--text);
   border: none;
   border-radius: 2px;
-  padding: 0.7rem 1.3rem;
+  padding: 0.75rem 1.4rem;
   font-family: 'IBM Plex Mono', monospace;
   font-size: 13px;
   color: var(--bg);
@@ -154,319 +127,127 @@ h1.hero-title {
   position: relative;
   user-select: none;
 }
-.install-btn:hover { background: var(--pink); }
-.install-btn .hint { font-size: 10px; color: rgba(255,255,255,0.55); }
+.install-btn:hover { background: var(--pink); color: var(--text); }
+.install-btn .hint { font-size: 10px; color: rgba(0,0,0,0.45); transition: color 0.15s; }
+.install-btn:hover .hint { color: rgba(255,255,255,0.5); }
 
-.toast {
-  position: absolute;
-  top: -34px; left: 50%;
-  transform: translateX(-50%);
-  background: var(--pink);
-  color: #fff;
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  padding: 3px 9px;
-  border-radius: 2px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.15s;
-  white-space: nowrap;
-}
+.toast { position: absolute; top: -36px; left: 50%; transform: translateX(-50%); background: var(--gold); color: #000; font-size: 10px; font-weight: 500; letter-spacing: 0.1em; padding: 3px 10px; border-radius: 2px; opacity: 0; pointer-events: none; transition: opacity 0.15s; white-space: nowrap; }
 .toast.on { opacity: 1; }
 
-.hero-tags {
-  margin-top: 1.8rem;
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.tag {
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 3px 8px;
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  color: var(--muted);
-}
+.hero-tags { margin-top: 1.6rem; display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; }
+.tag { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border: 1px solid var(--border); border-radius: 2px; color: var(--dim); }
 
-.section {
-  padding: 72px 2.5rem;
-  max-width: 960px;
-  margin: 0 auto;
-  border-bottom: 1px solid var(--border);
-}
+.section { padding: 80px 2rem; max-width: 980px; margin: 0 auto; border-bottom: 1px solid var(--border); }
 .section:last-of-type { border-bottom: none; }
 
-.sec-label {
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--pink);
-  margin-bottom: 1rem;
-}
-.sec-title {
-  font-family: 'Anton', sans-serif;
-  font-size: clamp(2.2rem, 6vw, 4rem);
-  font-weight: 400;
-  text-transform: uppercase;
-  line-height: 1;
-  color: var(--text);
-  margin-bottom: 1.4rem;
-}
-.sec-body {
-  font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 15px;
-  line-height: 1.8;
-  color: var(--text);
-  max-width: 640px;
-  margin-bottom: 2.5rem;
-}
+.sec-eyebrow { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--pink); margin-bottom: 0.6rem; }
+.sec-title { font-family: 'Anton', sans-serif; font-size: clamp(2.4rem, 6vw, 4.5rem); font-weight: 400; text-transform: uppercase; line-height: 1; color: var(--text); margin-bottom: 0.3em; }
+.sec-sub { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 2rem; }
+.sec-body { font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; line-height: 1.85; color: rgba(255,255,255,0.75); max-width: 660px; margin-bottom: 2.5rem; }
 
-.codeblock {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--pink);
-  border-radius: 2px;
-  padding: 1.3rem 1.5rem;
-  overflow-x: auto;
-  margin-bottom: 1.5rem;
-  position: relative;
-}
-.codeblock .lang {
-  position: absolute;
-  top: 0.6rem; right: 0.8rem;
-  font-size: 9px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.codeblock pre {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 13px;
-  line-height: 1.8;
-  white-space: pre;
-}
+.pull-quote { border-left: 3px solid var(--gold); padding: 0.8rem 1.4rem; margin: 2rem 0 2.5rem; background: var(--gold-dim); }
+.pull-quote p { font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; color: var(--gold); line-height: 1.65; font-style: italic; }
+.pull-quote cite { display: block; margin-top: 0.4rem; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-style: normal; }
+
+.codeblock { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--pink); border-radius: 2px; padding: 1.4rem 1.6rem; overflow-x: auto; margin-bottom: 1.5rem; position: relative; }
+.codeblock .lang { position: absolute; top: 0.6rem; right: 0.8rem; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); }
+.codeblock pre { font-family: 'IBM Plex Mono', monospace; font-size: 13px; line-height: 1.85; white-space: pre; }
 
 .k  { color: var(--pink);  font-weight: 500; }
 .s  { color: var(--green); }
-.n  { color: var(--amber); }
-.c  { color: #9A918A; font-style: italic; }
+.n  { color: var(--gold);  }
+.c  { color: var(--dim);   font-style: italic; }
 .f  { color: var(--blue);  }
-.op { color: #BCADA4; }
+.op { color: rgba(255,255,255,0.25); }
 .id { color: var(--text);  }
 
-.kw-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1px;
-  background: var(--border);
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  overflow: hidden;
-  margin-top: 2rem;
-}
-.kw-cell {
-  background: var(--bg);
-  padding: 0.9rem 1.1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-}
-.kw-word  { color: var(--pink); font-size: 13px; font-weight: 500; }
-.kw-maps  { font-size: 11px; color: var(--muted); }
-.kw-desc  {
-  font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 12px;
-  color: var(--text);
-  line-height: 1.5;
-  margin-top: 2px;
-  opacity: 0.75;
-}
+.kw-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 2px; overflow: hidden; margin-top: 2rem; }
+.kw-item { background: var(--surface); padding: 1.1rem 1.2rem; display: flex; flex-direction: column; gap: 0.25rem; }
+.kw-word   { color: var(--pink); font-size: 14px; font-weight: 500; }
+.kw-maps   { font-size: 11px; color: var(--muted); }
+.kw-origin { font-family: 'IBM Plex Sans', sans-serif; font-size: 12px; color: var(--gold); font-style: italic; line-height: 1.45; }
+.kw-desc   { font-family: 'IBM Plex Sans', sans-serif; font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.5; margin-top: 2px; }
 
-.callout {
-  background: var(--pink-dim);
-  border: 1px solid var(--pink-border);
-  border-radius: 2px;
-  padding: 1.1rem 1.4rem;
-  margin: 2rem 0 1rem;
-}
-.callout-title {
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--pink);
-  margin-bottom: 0.5rem;
-}
-.callout p {
-  font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 13.5px;
-  line-height: 1.7;
-  color: var(--text);
-}
+.callout { background: var(--pink-dim); border: 1px solid var(--pink-border); border-radius: 2px; padding: 1.2rem 1.4rem; margin: 2rem 0 1rem; }
+.callout-label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--pink); margin-bottom: 0.5rem; }
+.callout p { font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.8); }
 
-.stdlib-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1.2rem;
-  margin-top: 2rem;
-}
-.stdlib-card {
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  overflow: hidden;
-}
-.stdlib-head {
-  background: var(--surface);
-  padding: 0.7rem 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  border-bottom: 1px solid var(--border);
-}
-.stdlib-mod  { color: var(--pink); font-size: 12.5px; font-weight: 500; }
-.stdlib-city { font-size: 10px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
-.stdlib-fns  { padding: 0.7rem 1rem; background: var(--bg); }
-.stdlib-fn   { font-size: 11.5px; padding: 3px 0; color: var(--text); }
-.stdlib-fn code { color: var(--blue); font-family: 'IBM Plex Mono', monospace; }
-.stdlib-fn-desc { color: var(--muted); }
+.stdlib-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.2rem; margin-top: 2rem; }
+.stdlib-card { border: 1px solid var(--border); border-radius: 2px; overflow: hidden; }
+.stdlib-head { background: var(--surface2); padding: 0.7rem 1rem; border-bottom: 1px solid var(--border); display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; }
+.stdlib-mod  { color: var(--pink); font-size: 13px; font-weight: 500; }
+.stdlib-city { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+.stdlib-city-bk  { color: var(--pink); }
+.stdlib-city-atl { color: var(--gold); }
+.stdlib-body { padding: 0.8rem 1rem; background: var(--surface); }
+.stdlib-lore { font-family: 'IBM Plex Sans', sans-serif; font-size: 12px; color: var(--muted); font-style: italic; line-height: 1.5; margin-bottom: 0.7rem; border-bottom: 1px solid var(--border); padding-bottom: 0.7rem; }
+.stdlib-fn   { font-size: 12px; padding: 2px 0; color: rgba(255,255,255,0.6); }
+.stdlib-fn code { color: var(--blue); }
 
-.cli-rows {
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  overflow: hidden;
-  margin-top: 1.5rem;
-}
-.cli-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 1.5rem;
-  padding: 0.95rem 1.2rem;
-  border-bottom: 1px solid var(--border);
-}
+.cli-rows { border: 1px solid var(--border); border-radius: 2px; overflow: hidden; margin-top: 1.5rem; }
+.cli-row { display: flex; gap: 1.5rem; padding: 1rem 1.2rem; border-bottom: 1px solid var(--border); align-items: flex-start; }
 .cli-row:last-child { border-bottom: none; }
-.cli-cmd  { flex: 0 0 auto; color: var(--pink); font-size: 13px; font-weight: 500; min-width: 190px; }
-.cli-desc {
-  font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 13px;
-  color: var(--text);
-  line-height: 1.55;
-}
+.cli-cmd  { flex: 0 0 auto; color: var(--pink); font-size: 13px; font-weight: 500; min-width: 200px; }
+.cli-desc { font-family: 'IBM Plex Sans', sans-serif; font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.5; }
 
-.arch-row {
-  display: flex;
-  align-items: center;
-  overflow-x: auto;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  padding: 1.6rem 1.4rem;
-  margin-top: 2rem;
-  flex-wrap: nowrap;
-  gap: 0;
-}
-.arch-box {
-  flex: 0 0 auto;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  padding: 0.6rem 0.9rem;
-  text-align: center;
-}
-.arch-name { display: block; color: var(--pink); font-size: 12px; font-weight: 500; }
-.arch-sub  { display: block; color: var(--muted); font-size: 10px; margin-top: 2px; }
-.arch-arrow { flex: 0 0 auto; padding: 0 0.55rem; color: var(--muted); font-size: 14px; }
+.arch-row { display: flex; align-items: center; overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: 1.6rem; margin-top: 2rem; gap: 0; }
+.arch-box { flex: 0 0 auto; background: var(--surface2); border: 1px solid var(--border); border-radius: 2px; padding: 0.7rem 1rem; text-align: center; }
+.arch-name    { display: block; font-size: 12px; font-weight: 500; }
+.arch-bk      { color: var(--pink); }
+.arch-atl     { color: var(--gold); }
+.arch-neutral { color: var(--text); }
+.arch-sub     { display: block; color: var(--muted); font-size: 10px; margin-top: 2px; }
+.arch-arrow   { flex: 0 0 auto; padding: 0 0.6rem; color: var(--dim); font-size: 14px; }
 
-.roadmap-rows {
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  overflow: hidden;
-  margin-top: 1.5rem;
-}
-.roadmap-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: 0.85rem 1.2rem;
-  border-bottom: 1px solid var(--border);
-}
+.roadmap-rows { border: 1px solid var(--border); border-radius: 2px; overflow: hidden; margin-top: 1.5rem; }
+.roadmap-row { display: flex; gap: 1rem; padding: 0.9rem 1.2rem; border-bottom: 1px solid var(--border); align-items: flex-start; }
 .roadmap-row:last-child { border-bottom: none; }
-.rs {
-  flex: 0 0 auto;
-  font-size: 9px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 2px 7px;
-  border-radius: 2px;
-  margin-top: 3px;
-}
-.rs-done  { background: rgba(26,122,63,0.09);   color: var(--green); border: 1px solid rgba(26,122,63,0.2); }
-.rs-next  { background: var(--pink-dim);         color: var(--pink);  border: 1px solid var(--pink-border); }
-.rs-later { background: rgba(0,0,0,0.04);        color: var(--muted); border: 1px solid var(--border); }
-.roadmap-text {
-  font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 13px;
-  color: var(--text);
-  line-height: 1.5;
-}
+.rs { flex: 0 0 auto; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 7px; border-radius: 2px; margin-top: 3px; }
+.rs-done  { background: rgba(0,204,102,0.1);  color: var(--green); border: 1px solid rgba(0,204,102,0.2); }
+.rs-next  { background: var(--pink-dim);       color: var(--pink);  border: 1px solid var(--pink-border); }
+.rs-later { background: rgba(255,255,255,0.04);color: var(--muted); border: 1px solid var(--border); }
+.roadmap-text { font-family: 'IBM Plex Sans', sans-serif; font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.5; }
 
-.ex-label {
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 0.5rem;
-  padding-left: 2px;
-}
+.version-rows { border: 1px solid var(--border); border-radius: 2px; overflow: hidden; margin-top: 1.5rem; }
+.version-row { display: grid; grid-template-columns: 80px 1fr 1fr; gap: 1rem; padding: 0.85rem 1.2rem; border-bottom: 1px solid var(--border); align-items: center; font-size: 12px; }
+.version-row:last-child { border-bottom: none; }
+.version-row.active { background: var(--pink-dim); }
+.v-num  { color: var(--pink); font-weight: 500; }
+.v-name { color: var(--gold); font-family: 'IBM Plex Sans', sans-serif; font-style: italic; }
+.v-era  { color: var(--muted); font-family: 'IBM Plex Sans', sans-serif; }
 
-footer {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 2.2rem 2.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
-  border-top: 2px solid var(--text);
-}
-.footer-mark { font-size: 13px; color: var(--text); }
-.footer-mark .ext { color: var(--pink); }
+footer { max-width: 980px; margin: 0 auto; padding: 2.4rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; border-top: 3px solid var(--gold); }
+.footer-mark { font-size: 13px; font-weight: 500; }
+.footer-mark .brace { color: var(--pink); }
+.footer-mark .ext   { color: var(--gold); }
 .footer-links { display: flex; gap: 1.5rem; }
-.footer-links a {
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-  text-decoration: none;
-  transition: color 0.15s;
-}
-.footer-links a:hover { color: var(--pink); }
-.footer-copy { font-size: 11px; color: var(--muted); letter-spacing: 0.04em; }
+.footer-links a { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.15s; }
+.footer-links a:hover { color: var(--gold); }
+.footer-copy { font-size: 11px; color: var(--dim); letter-spacing: 0.04em; }
 
-.reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.5s ease, transform 0.5s ease; }
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
 .reveal.in { opacity: 1; transform: none; }
 
 @media (max-width: 700px) {
   nav { padding: 0 1.2rem; }
   .nav-links { gap: 1.2rem; }
   #hero { padding: 56px 1.2rem 52px; }
-  h1.hero-title { font-size: clamp(2.4rem, 10vw, 4rem); white-space: normal; }
-  .section { padding: 52px 1.2rem; }
+  h1.hero-title { font-size: clamp(2.8rem, 11vw, 4.5rem); white-space: normal; }
+  .section { padding: 56px 1.2rem; }
   .cli-row { flex-direction: column; gap: 0.3rem; }
   .arch-row { flex-direction: column; align-items: flex-start; }
   .arch-arrow { transform: rotate(90deg); padding: 0.3rem 0; }
+  .version-row { grid-template-columns: 1fr; gap: 0.2rem; }
 }
 </style>
 </head>
 <body>
 
 <nav>
-  <a href="#" class="nav-logo">&#128073;{&#128142;}<span class="ext">.rtj</span></a>
+  <a href="#" class="nav-logo">&#128073;<span class="brace">{</span>&#128142;<span class="brace">}</span><span class="ext">.rtj</span></a>
   <div class="nav-links">
-    <a href="#syntax">Syntax</a>
-    <a href="#stdlib">Stdlib</a>
+    <a href="#vocabulary">Keywords</a>
+    <a href="#cities">Stdlib</a>
     <a href="#examples">Examples</a>
     <a href="#cli">CLI</a>
     <a href="https://github.com/everettsteele/code-the-jewels" target="_blank" rel="noopener">GitHub &#8599;</a>
@@ -474,10 +255,11 @@ footer {
 </nav>
 
 <section id="hero">
-  <span class="hero-mark">&#128073;<span class="brace">{</span>&#128142;<span class="brace">}</span><span style="color:var(--pink);font-family:'IBM Plex Mono',monospace;font-size:3.2rem;">.rtj</span></span>
+  <span class="hero-mark">&#128073;<span class="brace">{</span>&#128142;<span class="brace">}</span><span class="ext">.rtj</span></span>
   <h1 class="hero-title">Code The Jewels</h1>
+  <p class="hero-cities"><span class="city-bk">Brooklyn</span> &nbsp;&middot;&nbsp; <span class="city-atl">Atlanta</span> &nbsp;&middot;&nbsp; MIT Forever</p>
   <div class="hero-rule"></div>
-  <p class="hero-sub">A programming language with <strong>personality</strong> &nbsp;&middot;&nbsp; transpiles to JavaScript</p>
+  <p class="hero-tagline">A programming language built the way <strong>Run The Jewels</strong> makes music.<br>Two cities. Two voices. One compiler.</p>
   <button class="install-btn" onclick="copyInstall()">
     <span>npm install -g code-the-jewels</span>
     <span class="hint">&#10152; copy</span>
@@ -485,186 +267,275 @@ footer {
   </button>
   <div class="hero-tags">
     <span class="tag">v0.1 RTJ0</span>
-    <span class="tag">MIT license</span>
-    <span class="tag">TypeScript compiler</span>
-    <span class="tag">Node.js runtime</span>
-    <span class="tag">13 keywords</span>
-    <span class="tag">4 stdlib modules</span>
+    <span class="tag">MIT License</span>
+    <span class="tag">TypeScript Compiler</span>
+    <span class="tag">Transpiles to JavaScript</span>
+    <span class="tag">13 Keywords</span>
+    <span class="tag">Free Forever</span>
   </div>
 </section>
 
 <div class="section reveal">
-  <p class="sec-label">What this is</p>
-  <h2 class="sec-title">Built for the joy of it</h2>
-  <p class="sec-body">Code The Jewels is a transpiled language inspired by Run The Jewels. You write <code>.rtj</code> files. The compiler, written in TypeScript, turns them into clean JavaScript. The runtime ships with a standard library where every module is named after a city. The CLI gives you a REPL. The language has 13 reserved words, a pipe operator, and a two-branch composition construct called <code>duo()</code>. It is weird on purpose. That is the point.</p>
-  <p class="sec-body" style="margin-bottom:0;">Built as part of Meridian's Creative Shit category: things built for the joy of building them. No MRR target. No maintenance SLA. MIT licensed. Fork it, break it, extend it.</p>
+  <p class="sec-eyebrow">Legend Has It</p>
+  <h2 class="sec-title">The Origin</h2>
+  <p class="sec-sub">RTJ3 &middot; Track 1 &middot; 2016</p>
+  <div class="pull-quote">
+    <p>El-P is from Brooklyn. Killer Mike is from Atlanta. They make music that sounds like neither city alone &mdash; dense, righteous, mechanical, earned. Two voices that shouldn't work together, and then do, completely.</p>
+    <cite>The philosophy behind the language</cite>
+  </div>
+  <p class="sec-body">Code The Jewels is a transpiled programming language. You write <code>.rtj</code> files. The compiler &mdash; written in TypeScript &mdash; turns them into clean JavaScript. Every design decision traces to a song, an album, a lyric, or a city. This is not superficial theming. The language is built the way RTJ makes music: two halves that require each other.</p>
+  <p class="sec-body" style="margin-bottom:0;">The stdlib modules are named after cities. The composition construct is named after the duo. The compiler stages are named after the RTJ logo. The whole thing is free, because RTJ releases their albums for free. Code The Jewels is MIT licensed. Always will be.</p>
 </div>
 
-<div id="syntax" class="section reveal">
-  <p class="sec-label">Language reference</p>
-  <h2 class="sec-title">13 keywords</h2>
-  <p class="sec-body">Every reserved word maps directly to a JavaScript concept. The language is deliberately small.</p>
+<div id="vocabulary" class="section reveal">
+  <p class="sec-eyebrow">A Report to the Shareholders</p>
+  <h2 class="sec-title">The Vocabulary</h2>
+  <p class="sec-sub">13 keywords &middot; every one has an origin</p>
+  <p class="sec-body">Every reserved word in Code The Jewels traces back to something in the RTJ catalog. Nothing was named arbitrarily.</p>
   <div class="kw-grid">
-    <div class="kw-cell"><span class="kw-word">jewel</span><span class="kw-maps">&rarr; const / let</span><span class="kw-desc">Declare a variable. Everything is a jewel.</span></div>
-    <div class="kw-cell"><span class="kw-word">verse</span><span class="kw-maps">&rarr; function</span><span class="kw-desc">Define a function. Every function is a verse.</span></div>
-    <div class="kw-cell"><span class="kw-word">send</span><span class="kw-maps">&rarr; return</span><span class="kw-desc">Return a value from a verse.</span></div>
-    <div class="kw-cell"><span class="kw-word">talk</span><span class="kw-maps">&rarr; console.log</span><span class="kw-desc">Print to stdout. Talk is cheap. Use it anyway.</span></div>
-    <div class="kw-cell"><span class="kw-word">ifwild</span><span class="kw-maps">&rarr; if</span><span class="kw-desc">Conditional branch. Things get wild when true.</span></div>
-    <div class="kw-cell"><span class="kw-word">elsewild</span><span class="kw-maps">&rarr; else</span><span class="kw-desc">The other branch. Still wild.</span></div>
-    <div class="kw-cell"><span class="kw-word">run</span><span class="kw-maps">&rarr; for</span><span class="kw-desc">Loop. Run it back.</span></div>
-    <div class="kw-cell"><span class="kw-word">in</span><span class="kw-maps">&rarr; in (loop)</span><span class="kw-desc">Loop target. Pairs with run.</span></div>
-    <div class="kw-cell"><span class="kw-word">feature</span><span class="kw-maps">&rarr; import</span><span class="kw-desc">Import a module. Feature the homies.</span></div>
-    <div class="kw-cell"><span class="kw-word">from</span><span class="kw-maps">&rarr; from</span><span class="kw-desc">Module source. Pairs with feature.</span></div>
-    <div class="kw-cell"><span class="kw-word">yank</span><span class="kw-maps">&rarr; throw</span><span class="kw-desc">Throw an error. Yank the chain.</span></div>
-    <div class="kw-cell"><span class="kw-word">duo</span><span class="kw-maps">&rarr; composition</span><span class="kw-desc">Two-branch pipeline. mike runs first, el second.</span></div>
-    <div class="kw-cell"><span class="kw-word">mike / el</span><span class="kw-maps">&rarr; duo branches</span><span class="kw-desc">Both required inside a duo() block.</span></div>
+    <div class="kw-item"><span class="kw-word">jewel</span><span class="kw-maps">&rarr; const / let</span><span class="kw-origin">"Run the jewels" &mdash; the thing worth having, worth taking, worth carrying.</span><span class="kw-desc">A variable is a jewel. You declare it, you carry it through the program with intent.</span></div>
+    <div class="kw-item"><span class="kw-word">verse</span><span class="kw-maps">&rarr; function</span><span class="kw-origin">RTJ songs are built from verses. El takes one. Mike takes one.</span><span class="kw-desc">A function is a verse &mdash; self-contained, expressive, contributes to the whole.</span></div>
+    <div class="kw-item"><span class="kw-word">send</span><span class="kw-maps">&rarr; return</span><span class="kw-origin">Deliver the jewel. In RTJ, nothing is wasted.</span><span class="kw-desc">When a verse has something to say, it sends it back to whoever called.</span></div>
+    <div class="kw-item"><span class="kw-word">talk</span><span class="kw-maps">&rarr; console.log</span><span class="kw-origin">"Talk to Me" &mdash; RTJ3, track 9, ft. Trina &amp; Gangsta Boo.</span><span class="kw-desc">RTJ talks directly to people. So does your program. Not print, not log &mdash; talk.</span></div>
+    <div class="kw-item"><span class="kw-word">ifwild</span><span class="kw-maps">&rarr; if</span><span class="kw-origin">RTJ energy in conditional form. When the condition holds, things get wild.</span><span class="kw-desc">Execute the branch when the expression is true. The run is live.</span></div>
+    <div class="kw-item"><span class="kw-word">elsewild</span><span class="kw-maps">&rarr; else</span><span class="kw-origin">Still wild. Just differently.</span><span class="kw-desc">The other branch. Both sides of a conditional are wild in this language.</span></div>
+    <div class="kw-item"><span class="kw-word">run</span><span class="kw-maps">&rarr; for loop</span><span class="kw-origin">"Run the Jewels." The whole operation. Also the CLI: <code>rtj run</code>.</span><span class="kw-desc">You run a program. You run a loop. You run the jewels. Everything is a run.</span></div>
+    <div class="kw-item"><span class="kw-word">in</span><span class="kw-maps">&rarr; loop target</span><span class="kw-origin">"In Brooklyn. In Atlanta. In the cut. In the booth."</span><span class="kw-desc">Where something moves through. Pairs with run.</span></div>
+    <div class="kw-item"><span class="kw-word">feature</span><span class="kw-maps">&rarr; import</span><span class="kw-origin">A feature is a guest appearance. You give collaborators their credit.</span><span class="kw-desc">When you import a module, you feature it. Origin matters, so you declare it.</span></div>
+    <div class="kw-item"><span class="kw-word">from</span><span class="kw-maps">&rarr; import source</span><span class="kw-origin">"From Brooklyn. From Atlanta." Where something comes from is part of what it is.</span><span class="kw-desc">The module's city of origin. Pairs with feature.</span></div>
+    <div class="kw-item"><span class="kw-word">yank</span><span class="kw-maps">&rarr; throw</span><span class="kw-origin">Pull the emergency brake. RTJ doesn't let things slide.</span><span class="kw-desc">When something is wrong, you yank. Throws an error and stops the run.</span></div>
+    <div class="kw-item"><span class="kw-word">duo</span><span class="kw-maps">&rarr; two-branch composition</span><span class="kw-origin">Mike and El. The whole thing. Requires exactly two branches, always.</span><span class="kw-desc">The signature construct. You cannot have a duo without both voices.</span></div>
+    <div class="kw-item"><span class="kw-word">mike &nbsp;/&nbsp; el</span><span class="kw-maps">&rarr; duo branches</span><span class="kw-origin">Killer Mike (Atlanta). El-P (Brooklyn). mike opens. el responds.</span><span class="kw-desc">Both required inside every duo(). mike runs first, el receives the output and closes.</span></div>
   </div>
-  <div class="callout" style="margin-top:2.5rem;">
-    <p class="callout-title">|&gt; Pipe operator</p>
-    <p>Thread a value through a chain. Each output becomes the next input. Compiles to nested function calls.</p>
-  </div>
-  <div class="codeblock">
-    <span class="lang">.rtj</span>
-    <pre><span class="k">jewel</span> <span class="id">result</span> <span class="op">=</span> <span class="s">"  hello world  "</span>
-  <span class="op">|&gt;</span> <span class="f">trim</span>
-  <span class="op">|&gt;</span> <span class="f">upper</span>
-  <span class="op">|&gt;</span> <span class="f">split</span><span class="op">(</span><span class="s">" "</span><span class="op">)</span>
+</div>
 
-<span class="c">// compiles to: split(upper(trim("  hello world  ")), " ")</span></pre>
+<div class="section reveal">
+  <p class="sec-eyebrow">yankee and the brave (ep. 4)</p>
+  <h2 class="sec-title">The duo() Construct</h2>
+  <p class="sec-sub">RTJ4 &middot; Track 1 &middot; 2020</p>
+  <div class="pull-quote">
+    <p>The opening track of RTJ4. Mike is the Yankee. El is the Brave. Two perspectives, one statement. Neither makes sense without the other. The duo() construct works exactly the same way.</p>
+    <cite>yankee and the brave (ep. 4) &mdash; RTJ4</cite>
   </div>
   <div class="callout">
-    <p class="callout-title">duo() &mdash; the signature construct</p>
-    <p><strong>mike</strong> runs first, <strong>el</strong> runs second. Both are required. The output chains between them.</p>
+    <p class="callout-label">The construct</p>
+    <p><strong>mike</strong> runs first &mdash; the opening verse, sets the tone. <strong>el</strong> receives what mike produced and closes it out. Both branches are required. The output chains between them. This is the most RTJ thing in the language.</p>
   </div>
   <div class="codeblock">
     <span class="lang">.rtj</span>
     <pre><span class="k">jewel</span> <span class="id">result</span> <span class="op">=</span> <span class="f">duo</span><span class="op">(</span><span class="id">inputValue</span><span class="op">)</span> <span class="op">{</span>
-  <span class="k">mike</span><span class="op">:</span> <span class="f">processFirst</span>
-  <span class="k">el</span><span class="op">:</span>   <span class="f">processSecond</span>
+  <span class="k">mike</span><span class="op">:</span> <span class="f">processFirst</span>    <span class="c">// Killer Mike opens &mdash; Atlanta</span>
+  <span class="k">el</span><span class="op">:</span>   <span class="f">processSecond</span>   <span class="c">// El-P responds &mdash; Brooklyn</span>
 <span class="op">}</span>
 
-<span class="c">// compiles to: processSecond(processFirst(inputValue))</span></pre>
+<span class="c">// compiles to: processSecond(processFirst(inputValue))</span>
+<span class="c">// mike is always inner. el is always outer.</span>
+<span class="c">// El produces the foundation. Mike lays the bar on top.</span></pre>
   </div>
-</div>
+  <div class="callout" style="margin-top:2rem;">
+    <p class="callout-label">|&gt; The pipe operator &mdash; Passing the Jewel</p>
+    <p>Thread a value through a chain. Each output becomes the next input. You are running the jewels through a sequence, each step handling them before passing forward.</p>
+  </div>
+  <div class="codeblock">
+    <span class="lang">.rtj</span>
+    <pre><span class="k">feature</span> <span class="op">{</span> <span class="id">trim</span><span class="op">,</span> <span class="id">upper</span><span class="op">,</span> <span class="id">split</span> <span class="op">}</span> <span class="k">from</span> <span class="s">"bk:text"</span>
 
-<div id="examples" class="section reveal">
-  <p class="sec-label">Real code</p>
-  <h2 class="sec-title">Show me</h2>
-  <p class="sec-body">Five programs. Hello world to composition.</p>
-  <p class="ex-label">1 &mdash; hello world</p>
-  <div class="codeblock"><span class="lang">.rtj</span><pre><span class="k">talk</span> <span class="s">"Run The Jewels forever"</span></pre></div>
-  <p class="ex-label">2 &mdash; variables and functions</p>
-  <div class="codeblock"><span class="lang">.rtj</span><pre><span class="k">jewel</span> <span class="id">trackName</span> <span class="op">=</span> <span class="s">"Legend Has It"</span>
-<span class="k">jewel</span> <span class="id">bpm</span>       <span class="op">=</span> <span class="n">118</span>
-
-<span class="k">verse</span> <span class="f">describe</span><span class="op">(</span><span class="id">name</span><span class="op">,</span> <span class="id">tempo</span><span class="op">)</span> <span class="op">{</span>
-  <span class="k">send</span> <span class="s">`${</span><span class="id">name</span><span class="s">} hits at ${</span><span class="id">tempo</span><span class="s">} BPM`</span>
-<span class="op">}</span>
-
-<span class="k">talk</span> <span class="f">describe</span><span class="op">(</span><span class="id">trackName</span><span class="op">,</span> <span class="id">bpm</span><span class="op">)</span></pre></div>
-  <p class="ex-label">3 &mdash; pipe chain</p>
-  <div class="codeblock"><span class="lang">.rtj</span><pre><span class="k">feature</span> <span class="op">{</span> <span class="id">trim</span><span class="op">,</span> <span class="id">upper</span><span class="op">,</span> <span class="id">split</span> <span class="op">}</span> <span class="k">from</span> <span class="s">"bk:text"</span>
-
-<span class="k">jewel</span> <span class="id">words</span> <span class="op">=</span> <span class="s">"  tom morello  "</span>
+<span class="k">jewel</span> <span class="id">result</span> <span class="op">=</span> <span class="s">"  legend has it  "</span>
   <span class="op">|&gt;</span> <span class="f">trim</span>
   <span class="op">|&gt;</span> <span class="f">upper</span>
   <span class="op">|&gt;</span> <span class="f">split</span><span class="op">(</span><span class="s">" "</span><span class="op">)</span>
 
-<span class="k">talk</span> <span class="id">words</span>  <span class="c">// ["TOM", "MORELLO"]</span></pre></div>
-  <p class="ex-label">4 &mdash; loop and conditional</p>
-  <div class="codeblock"><span class="lang">.rtj</span><pre><span class="k">jewel</span> <span class="id">tracks</span> <span class="op">=</span> <span class="op">[</span><span class="s">"Legend Has It"</span><span class="op">,</span> <span class="s">"Talk to Me"</span><span class="op">,</span> <span class="s">"Yankee"</span><span class="op">]</span>
-
-<span class="k">run</span> <span class="id">track</span> <span class="k">in</span> <span class="id">tracks</span> <span class="op">{</span>
-  <span class="k">ifwild</span> <span class="op">(</span><span class="id">track</span><span class="op">.</span><span class="id">length</span> <span class="op">&gt;</span> <span class="n">10</span><span class="op">)</span> <span class="op">{</span>
-    <span class="k">talk</span> <span class="s">`Long: ${</span><span class="id">track</span><span class="s">}`</span>
-  <span class="op">}</span> <span class="k">elsewild</span> <span class="op">{</span>
-    <span class="k">talk</span> <span class="s">`Short: ${</span><span class="id">track</span><span class="s">}`</span>
-  <span class="op">}</span>
-<span class="op">}</span></pre></div>
-  <p class="ex-label">5 &mdash; duo() composition</p>
-  <div class="codeblock"><span class="lang">.rtj</span><pre><span class="k">feature</span> <span class="op">{</span> <span class="id">count</span> <span class="op">}</span> <span class="k">from</span> <span class="s">"atl:data"</span>
-<span class="k">feature</span> <span class="op">{</span> <span class="id">words</span> <span class="op">}</span> <span class="k">from</span> <span class="s">"bk:parse"</span>
-
-<span class="k">jewel</span> <span class="id">line</span> <span class="op">=</span> <span class="s">"Stay gold Ponyboy stay gold"</span>
-
-<span class="k">jewel</span> <span class="id">result</span> <span class="op">=</span> <span class="f">duo</span><span class="op">(</span><span class="id">line</span><span class="op">)</span> <span class="op">{</span>
-  <span class="k">mike</span><span class="op">:</span> <span class="id">words</span>
-  <span class="k">el</span><span class="op">:</span>   <span class="id">count</span>
-<span class="op">}</span>
-
-<span class="k">talk</span> <span class="id">result</span>  <span class="c">// 5</span></pre></div>
+<span class="c">// ["LEGEND", "HAS", "IT"]</span></pre>
+  </div>
 </div>
 
-<div id="stdlib" class="section reveal">
-  <p class="sec-label">Standard library</p>
-  <h2 class="sec-title">Named after cities</h2>
-  <p class="sec-body">Four modules. Brooklyn handles text. Atlanta handles data. Every name is a city in the RTJ universe.</p>
+<div id="examples" class="section reveal">
+  <p class="sec-eyebrow">Blockbuster Night</p>
+  <h2 class="sec-title">Run It</h2>
+  <p class="sec-sub">RTJ2 &middot; Track 1 &middot; 2014 &middot; Five programs</p>
+
+  <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;">1 &mdash; Hello world</p>
+  <div class="codeblock"><span class="lang">.rtj</span><pre><span class="k">talk</span> <span class="s">"Run The Jewels forever"</span></pre></div>
+
+  <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;">2 &mdash; Variables and functions</p>
+  <div class="codeblock"><span class="lang">.rtj</span><pre><span class="k">jewel</span> <span class="id">trackName</span> <span class="op">=</span> <span class="s">"Legend Has It"</span>
+<span class="k">jewel</span> <span class="id">bpm</span>       <span class="op">=</span> <span class="n">118</span>
+
+<span class="k">verse</span> <span class="f">describe</span><span class="op">(</span><span class="id">name</span><span class="op">,</span> <span class="id">tempo</span><span class="op">)</span> <span class="op">{</span>
+  <span class="k">send</span> <span class="s">`${name} hits at ${tempo} BPM`</span>
+<span class="op">}</span>
+
+<span class="k">talk</span> <span class="f">describe</span><span class="op">(</span><span class="id">trackName</span><span class="op">,</span> <span class="id">bpm</span><span class="op">)</span>
+<span class="c">// "Legend Has It hits at 118 BPM"</span></pre></div>
+
+  <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;">3 &mdash; Loop and conditional (RTJ3 tracklist)</p>
+  <div class="codeblock"><span class="lang">.rtj</span><pre><span class="k">jewel</span> <span class="id">rtj3</span> <span class="op">=</span> <span class="op">[</span>
+  <span class="s">"Talk to Me"</span><span class="op">,</span>
+  <span class="s">"Legend Has It"</span><span class="op">,</span>
+  <span class="s">"Call Ticketron"</span><span class="op">,</span>
+  <span class="s">"Stay Gold"</span>
+<span class="op">]</span>
+
+<span class="k">run</span> <span class="id">track</span> <span class="k">in</span> <span class="id">rtj3</span> <span class="op">{</span>
+  <span class="k">ifwild</span> <span class="op">(</span><span class="id">track</span><span class="op">.</span><span class="id">length</span> <span class="op">&gt;</span> <span class="n">9</span><span class="op">)</span> <span class="op">{</span>
+    <span class="k">talk</span> <span class="s">`long title: ${track}`</span>
+  <span class="op">}</span> <span class="k">elsewild</span> <span class="op">{</span>
+    <span class="k">talk</span> <span class="s">`short: ${track}`</span>
+  <span class="op">}</span>
+<span class="op">}</span></pre></div>
+
+  <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;">4 &mdash; Pipe chain</p>
+  <div class="codeblock"><span class="lang">.rtj</span><pre><span class="k">feature</span> <span class="op">{</span> <span class="id">trim</span><span class="op">,</span> <span class="id">upper</span><span class="op">,</span> <span class="id">split</span> <span class="op">}</span> <span class="k">from</span> <span class="s">"bk:text"</span>
+
+<span class="k">jewel</span> <span class="id">words</span> <span class="op">=</span> <span class="s">"  stay gold ponyboy  "</span>
+  <span class="op">|&gt;</span> <span class="f">trim</span>
+  <span class="op">|&gt;</span> <span class="f">upper</span>
+  <span class="op">|&gt;</span> <span class="f">split</span><span class="op">(</span><span class="s">" "</span><span class="op">)</span>
+
+<span class="k">talk</span> <span class="id">words</span>
+<span class="c">// ["STAY", "GOLD", "PONYBOY"]</span></pre></div>
+
+  <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;">5 &mdash; duo() in action</p>
+  <div class="codeblock"><span class="lang">.rtj</span><pre><span class="k">feature</span> <span class="op">{</span> <span class="id">words</span> <span class="op">}</span> <span class="k">from</span> <span class="s">"bk:parse"</span>
+<span class="k">feature</span> <span class="op">{</span> <span class="id">count</span> <span class="op">}</span> <span class="k">from</span> <span class="s">"atl:data"</span>
+
+<span class="k">jewel</span> <span class="id">line</span> <span class="op">=</span> <span class="s">"walking in the snow"</span>
+
+<span class="k">jewel</span> <span class="id">wordCount</span> <span class="op">=</span> <span class="f">duo</span><span class="op">(</span><span class="id">line</span><span class="op">)</span> <span class="op">{</span>
+  <span class="k">mike</span><span class="op">:</span> <span class="id">words</span>    <span class="c">// ATL: break it into words</span>
+  <span class="k">el</span><span class="op">:</span>   <span class="id">count</span>    <span class="c">// BK: count them</span>
+<span class="op">}</span>
+
+<span class="k">talk</span> <span class="id">wordCount</span>  <span class="c">// 4</span></pre></div>
+</div>
+
+<div id="cities" class="section reveal">
+  <p class="sec-eyebrow">Two Cities</p>
+  <h2 class="sec-title">The Standard Library</h2>
+  <p class="sec-sub">Brooklyn &middot; Atlanta &middot; Every module has a hometown</p>
+  <p class="sec-body">El-P is from Brooklyn. Killer Mike is from Atlanta. Every stdlib module carries a city prefix because where something comes from is part of what it is. <code>bk:</code> is El's borough. <code>atl:</code> is Mike's city.</p>
   <div class="stdlib-grid">
-    <div class="stdlib-card"><div class="stdlib-head"><span class="stdlib-mod">bk:text</span><span class="stdlib-city">Brooklyn</span></div><div class="stdlib-fns"><div class="stdlib-fn"><code>trim(str)</code> <span class="stdlib-fn-desc">&mdash; strip whitespace</span></div><div class="stdlib-fn"><code>upper(str)</code> <span class="stdlib-fn-desc">&mdash; to uppercase</span></div><div class="stdlib-fn"><code>lower(str)</code> <span class="stdlib-fn-desc">&mdash; to lowercase</span></div><div class="stdlib-fn"><code>split(str, sep)</code> <span class="stdlib-fn-desc">&mdash; split to array</span></div><div class="stdlib-fn"><code>join(arr, sep)</code> <span class="stdlib-fn-desc">&mdash; join to string</span></div></div></div>
-    <div class="stdlib-card"><div class="stdlib-head"><span class="stdlib-mod">bk:parse</span><span class="stdlib-city">Brooklyn</span></div><div class="stdlib-fns"><div class="stdlib-fn"><code>words(str)</code> <span class="stdlib-fn-desc">&mdash; split into words</span></div><div class="stdlib-fn"><code>lines(str)</code> <span class="stdlib-fn-desc">&mdash; split into lines</span></div><div class="stdlib-fn"><code>chars(str)</code> <span class="stdlib-fn-desc">&mdash; split into chars</span></div></div></div>
-    <div class="stdlib-card"><div class="stdlib-head"><span class="stdlib-mod">atl:data</span><span class="stdlib-city">Atlanta</span></div><div class="stdlib-fns"><div class="stdlib-fn"><code>count(arr)</code> <span class="stdlib-fn-desc">&mdash; array length</span></div><div class="stdlib-fn"><code>countBy(arr, fn)</code> <span class="stdlib-fn-desc">&mdash; conditional count</span></div><div class="stdlib-fn"><code>first(arr)</code> <span class="stdlib-fn-desc">&mdash; first element</span></div><div class="stdlib-fn"><code>last(arr)</code> <span class="stdlib-fn-desc">&mdash; last element</span></div></div></div>
-    <div class="stdlib-card"><div class="stdlib-head"><span class="stdlib-mod">atl:flow</span><span class="stdlib-city">Atlanta</span></div><div class="stdlib-fns"><div class="stdlib-fn"><code>identity(x)</code> <span class="stdlib-fn-desc">&mdash; returns x unchanged</span></div></div></div>
+    <div class="stdlib-card">
+      <div class="stdlib-head"><span class="stdlib-mod">bk:text</span><span class="stdlib-city stdlib-city-bk">Brooklyn &mdash; El-P</span></div>
+      <div class="stdlib-body">
+        <p class="stdlib-lore">El's production is precision &mdash; every sound placed exactly right, nothing wasted. Text manipulation mirrors that discipline.</p>
+        <div class="stdlib-fn"><code>trim(str)</code> &mdash; remove whitespace</div>
+        <div class="stdlib-fn"><code>upper(str)</code> &mdash; to uppercase</div>
+        <div class="stdlib-fn"><code>lower(str)</code> &mdash; to lowercase</div>
+        <div class="stdlib-fn"><code>split(str, sep)</code> &mdash; split to array</div>
+        <div class="stdlib-fn"><code>join(arr, sep)</code> &mdash; join to string</div>
+      </div>
+    </div>
+    <div class="stdlib-card">
+      <div class="stdlib-head"><span class="stdlib-mod">bk:parse</span><span class="stdlib-city stdlib-city-bk">Brooklyn &mdash; El-P</span></div>
+      <div class="stdlib-body">
+        <p class="stdlib-lore">El's style: deconstruct, examine, reconstruct. Break raw material into its components.</p>
+        <div class="stdlib-fn"><code>words(str)</code> &mdash; split into words</div>
+        <div class="stdlib-fn"><code>lines(str)</code> &mdash; split into lines</div>
+        <div class="stdlib-fn"><code>chars(str)</code> &mdash; split into chars</div>
+      </div>
+    </div>
+    <div class="stdlib-card">
+      <div class="stdlib-head"><span class="stdlib-mod">atl:data</span><span class="stdlib-city stdlib-city-atl">Atlanta &mdash; Killer Mike</span></div>
+      <div class="stdlib-body">
+        <p class="stdlib-lore">Mike's delivery: direct, efficient, no motion wasted. Data operations with ATL economy.</p>
+        <div class="stdlib-fn"><code>count(arr)</code> &mdash; array length</div>
+        <div class="stdlib-fn"><code>countBy(arr, fn)</code> &mdash; conditional count</div>
+        <div class="stdlib-fn"><code>first(arr)</code> &mdash; first element</div>
+        <div class="stdlib-fn"><code>last(arr)</code> &mdash; last element</div>
+      </div>
+    </div>
+    <div class="stdlib-card">
+      <div class="stdlib-head"><span class="stdlib-mod">atl:flow</span><span class="stdlib-city stdlib-city-atl">Atlanta &mdash; Killer Mike</span></div>
+      <div class="stdlib-body">
+        <p class="stdlib-lore">Atlanta moves with deliberate weight. Control flow that passes through clean.</p>
+        <div class="stdlib-fn"><code>identity(x)</code> &mdash; returns x unchanged</div>
+      </div>
+    </div>
+  </div>
+  <div class="pull-quote" style="margin-top:2rem;">
+    <p>Planned: <code>htx:</code> (Houston &mdash; chopped &amp; screwed async), <code>chi:</code> (Chicago &mdash; DOM), <code>det:</code> (Detroit &mdash; file system), <code>la:</code> (Los Angeles &mdash; HTTP). Every city in the RTJ universe.</p>
+    <cite>Roadmap &mdash; more cities coming</cite>
   </div>
 </div>
 
 <div id="cli" class="section reveal">
-  <p class="sec-label">Command line</p>
-  <h2 class="sec-title">rtj</h2>
-  <p class="sec-body">Four commands. Run it, compile it, check it, or drop into the REPL.</p>
+  <p class="sec-eyebrow">Run the Jewels</p>
+  <h2 class="sec-title">The CLI</h2>
+  <p class="sec-sub">Four commands &middot; npm install -g code-the-jewels &middot; then: rtj</p>
   <div class="cli-rows">
-    <div class="cli-row"><span class="cli-cmd">rtj run file.rtj</span><span class="cli-desc">Execute a .rtj file directly. Transpiles to JS in memory and runs immediately.</span></div>
-    <div class="cli-row"><span class="cli-cmd">rtj compile file.rtj</span><span class="cli-desc">Transpile to output.js. Writes generated JavaScript to disk.</span></div>
-    <div class="cli-row"><span class="cli-cmd">rtj check file.rtj</span><span class="cli-desc">Semantic analysis without execution. Reports type and scope errors.</span></div>
-    <div class="cli-row"><span class="cli-cmd">rtj repl</span><span class="cli-desc">Interactive REPL. Prompt shows <code style="color:var(--pink)">rtj&gt;</code>. Type .exit to quit.</span></div>
+    <div class="cli-row"><span class="cli-cmd">rtj run file.rtj</span><span class="cli-desc">Execute a .rtj file. Transpiles to JavaScript in memory and runs immediately. The full run.</span></div>
+    <div class="cli-row"><span class="cli-cmd">rtj compile file.rtj</span><span class="cli-desc">Transpile to output.js. Writes the generated JavaScript to disk.</span></div>
+    <div class="cli-row"><span class="cli-cmd">rtj check file.rtj</span><span class="cli-desc">Semantic analysis without execution. Reports scope and type errors. The Mike Pass, isolated.</span></div>
+    <div class="cli-row"><span class="cli-cmd">rtj repl</span><span class="cli-desc">Interactive REPL. Prompt shows <code style="color:var(--pink)">rtj&gt;</code>. Type .exit to quit. .legend for version info.</span></div>
   </div>
   <div class="codeblock" style="margin-top:1.8rem;">
     <span class="lang">terminal</span>
     <pre><span class="op">$</span> <span class="id">rtj repl</span>
-<span class="c">Welcome to Code The Jewels v0.1 (RTJ0)</span>
-<span class="c">&#128073;{&#128142;}.rtj  &mdash; type .exit to quit</span>
-<span class="op">rtj&gt;</span> <span class="k">jewel</span> <span class="id">x</span> <span class="op">=</span> <span class="n">42</span>
+
+  <span class="id">&#128073;{&#128142;}.rtj</span>
+  <span class="id">Code The Jewels v0.1 &mdash; RTJ0 "The Self-Titled Era"</span>
+  <span class="id">El-P (Brooklyn) &amp; Killer Mike (Atlanta) &mdash; MIT Forever</span>
+
+<span class="c">  .help for commands  &middot;  .exit to quit</span>
+
+<span class="op">rtj&gt;</span> <span class="k">jewel</span> <span class="id">x</span> <span class="op">=</span> <span class="s">"legend has it"</span>
 <span class="op">rtj&gt;</span> <span class="k">talk</span> <span class="id">x</span>
-<span class="n">42</span>
+<span class="s">legend has it</span>
 <span class="op">rtj&gt;</span></pre>
   </div>
 </div>
 
 <div class="section reveal">
-  <p class="sec-label">Compiler architecture</p>
-  <h2 class="sec-title">How it works</h2>
-  <p class="sec-body">Six stages, all named after RTJ references. The Fist parses. The Hands define the AST. Mike and El run analysis passes. The Gun generates output. The Jewel Box is the runtime.</p>
+  <p class="sec-eyebrow">The Logo</p>
+  <h2 class="sec-title">The Fist &amp; The Gun</h2>
+  <p class="sec-sub">Six stages &middot; all named after RTJ &middot; The Fist is El, The Gun is Mike</p>
+  <p class="sec-body">The RTJ logo is two objects: a fist (El-P's half) and a gun (Killer Mike's half). The compiler stages carry those names. Each stage has an owner.</p>
   <div class="arch-row">
-    <div class="arch-box"><span class="arch-name">The Fist</span><span class="arch-sub">Lexer + Parser</span></div>
+    <div class="arch-box"><span class="arch-name arch-bk">The Fist</span><span class="arch-sub">Lexer + Parser (El)</span></div>
     <span class="arch-arrow">&rarr;</span>
-    <div class="arch-box"><span class="arch-name">The Hands</span><span class="arch-sub">AST</span></div>
+    <div class="arch-box"><span class="arch-name arch-neutral">The Hands</span><span class="arch-sub">AST</span></div>
     <span class="arch-arrow">&rarr;</span>
-    <div class="arch-box"><span class="arch-name">Mike Pass</span><span class="arch-sub">Semantic</span></div>
+    <div class="arch-box"><span class="arch-name arch-atl">Mike Pass</span><span class="arch-sub">Semantic (Mike)</span></div>
     <span class="arch-arrow">&rarr;</span>
-    <div class="arch-box"><span class="arch-name">El Pass</span><span class="arch-sub">Lowering</span></div>
+    <div class="arch-box"><span class="arch-name arch-bk">El Pass</span><span class="arch-sub">Lowering (El)</span></div>
     <span class="arch-arrow">&rarr;</span>
-    <div class="arch-box"><span class="arch-name">The Gun</span><span class="arch-sub">JS Generator</span></div>
+    <div class="arch-box"><span class="arch-name arch-atl">The Gun</span><span class="arch-sub">JS Generator (Mike)</span></div>
     <span class="arch-arrow">&rarr;</span>
-    <div class="arch-box"><span class="arch-name">Jewel Box</span><span class="arch-sub">Runtime + stdlib</span></div>
+    <div class="arch-box"><span class="arch-name arch-neutral">Jewel Box</span><span class="arch-sub">Runtime + stdlib</span></div>
+  </div>
+  <div class="pull-quote" style="margin-top:2rem;">
+    <p><strong>The Fist</strong> (El-P) reads every token and builds the AST &mdash; dense, mechanical, precise. <strong>Mike Pass</strong> validates meaning. <strong>El Pass</strong> rewrites and lowers. <strong>The Gun</strong> (Killer Mike) fires: generates clean JavaScript.</p>
+    <cite>El builds the foundation. Mike closes it out.</cite>
   </div>
 </div>
 
 <div class="section reveal">
-  <p class="sec-label">What's next</p>
-  <h2 class="sec-title">Roadmap</h2>
-  <div class="roadmap-rows">
-    <div class="roadmap-row"><span class="rs rs-done">Done</span><span class="roadmap-text">Full language spec &mdash; 13 keywords, pipe operator, duo() construct</span></div>
-    <div class="roadmap-row"><span class="rs rs-done">Done</span><span class="roadmap-text">Compiler architecture &mdash; The Fist, Hands, Mike Pass, El Pass, The Gun</span></div>
+  <p class="sec-eyebrow">Stay Gold</p>
+  <h2 class="sec-title">What's Next</h2>
+  <p class="sec-sub">RTJ3 &middot; Track 8 &middot; 2016</p>
+  <div class="roadmap-rows" style="margin-bottom:2rem;">
+    <div class="roadmap-row"><span class="rs rs-done">Done</span><span class="roadmap-text">Full language spec &mdash; 13 keywords with RTJ origins, pipe operator, duo() construct</span></div>
+    <div class="roadmap-row"><span class="rs rs-done">Done</span><span class="roadmap-text">Compiler architecture &mdash; The Fist, Hands, Mike Pass, El Pass, The Gun, Jewel Box</span></div>
     <div class="roadmap-row"><span class="rs rs-done">Done</span><span class="roadmap-text">Standard library &mdash; bk:text, bk:parse, atl:data, atl:flow</span></div>
-    <div class="roadmap-row"><span class="rs rs-next">Next</span><span class="roadmap-text">Ship v0.1 to npm &mdash; rtj CLI installable globally</span></div>
-    <div class="roadmap-row"><span class="rs rs-next">Next</span><span class="roadmap-text">VSCode extension &mdash; syntax highlighting for .rtj files</span></div>
-    <div class="roadmap-row"><span class="rs rs-later">Later</span><span class="roadmap-text">More stdlib cities &mdash; Chicago (chgo:), Houston (htx:)</span></div>
-    <div class="roadmap-row"><span class="rs rs-later">Later</span><span class="roadmap-text">Source maps &mdash; real line numbers in error messages</span></div>
+    <div class="roadmap-row"><span class="rs rs-next">Next</span><span class="roadmap-text">Ship v0.1 to npm &mdash; <code>rtj</code> installable globally, REPL with RTJ welcome banner</span></div>
+    <div class="roadmap-row"><span class="rs rs-next">Next</span><span class="roadmap-text">VSCode extension &mdash; .rtj syntax highlighting in pink and gold</span></div>
+    <div class="roadmap-row"><span class="rs rs-later">Later</span><span class="roadmap-text">More stdlib cities &mdash; htx:, chi:, det:, la: &mdash; every city in the RTJ universe</span></div>
+    <div class="roadmap-row"><span class="rs rs-later">Later</span><span class="roadmap-text">RTJ-flavored error messages &mdash; "this jewel don't exist", "duo() needs both mike and el"</span></div>
     <div class="roadmap-row"><span class="rs rs-later">Later</span><span class="roadmap-text">Browser playground &mdash; run .rtj without installing anything</span></div>
+  </div>
+  <p class="sec-sub" style="margin-top:1.5rem;">Version naming follows the RTJ album eras</p>
+  <div class="version-rows">
+    <div class="version-row active"><span class="v-num">v0.1</span><span class="v-name">RTJ0 &mdash; "The Self-Titled Era"</span><span class="v-era">Before the albums. The demo.</span></div>
+    <div class="version-row"><span class="v-num">v0.2</span><span class="v-name">RTJ1 &mdash; "Run the Jewels"</span><span class="v-era">First release. Free forever.</span></div>
+    <div class="version-row"><span class="v-num">v0.3</span><span class="v-name">RTJ2 &mdash; "Blockbuster"</span><span class="v-era">The leap. Bigger, harder.</span></div>
+    <div class="version-row"><span class="v-num">v1.0</span><span class="v-name">RTJ3 &mdash; "Legend Has It"</span><span class="v-era">Stable. Earned.</span></div>
+    <div class="version-row"><span class="v-num">v2.0</span><span class="v-name">RTJ4 &mdash; "Walking in the Snow"</span><span class="v-era">The reckoning.</span></div>
   </div>
 </div>
 
 <footer>
-  <span class="footer-mark">&#128073;{&#128142;}<span class="ext">.rtj</span></span>
+  <span class="footer-mark">&#128073;<span class="brace">{</span>&#128142;<span class="brace">}</span><span class="ext">.rtj</span></span>
   <div class="footer-links">
     <a href="https://github.com/everettsteele/code-the-jewels" target="_blank" rel="noopener">GitHub</a>
     <a href="https://neverstill.llc" target="_blank" rel="noopener">Meridian</a>
@@ -677,10 +548,10 @@ function copyInstall() {
   navigator.clipboard.writeText('npm install -g code-the-jewels').catch(function(){});
   var t = document.getElementById('toast');
   t.classList.add('on');
-  setTimeout(function(){ t.classList.remove('on'); }, 1600);
+  setTimeout(function(){ t.classList.remove('on'); }, 1800);
 }
 var obs = new IntersectionObserver(function(entries) {
-  entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
+  entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }});
 }, { threshold: 0.06 });
 document.querySelectorAll('.reveal').forEach(function(el){ obs.observe(el); });
 </script>
