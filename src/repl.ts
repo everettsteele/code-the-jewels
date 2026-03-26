@@ -28,6 +28,14 @@ export function startRepl(): void {
 
   const history: string[] = [];
 
+  console.log('');
+  console.log('  \uD83D\uDC49{\uD83D\uDC8E}.rtj');
+  console.log('  Code The Jewels v0.1 \u2014 RTJ0 "The Self-Titled Era"');
+  console.log('  El-P (Brooklyn) & Killer Mike (Atlanta) \u2014 MIT Forever');
+  console.log('');
+  console.log('  .help for commands  \u00B7  .exit to quit');
+  console.log('');
+
   rl.prompt();
 
   rl.on('line', (line) => {
@@ -36,6 +44,26 @@ export function startRepl(): void {
       process.exit(0);
     }
     if (input === '') {
+      rl.prompt();
+      return;
+    }
+    if (input === '.help') {
+      console.log('.exit   quit the REPL');
+      console.log('.legend print version info');
+      console.log('.duo    print duo() spec');
+      rl.prompt();
+      return;
+    }
+    if (input === '.legend') {
+      console.log('Code The Jewels v0.1 \u2014 RTJ0 "The Self-Titled Era"');
+      console.log('El-P (Brooklyn) & Killer Mike (Atlanta) \u2014 MIT Forever');
+      rl.prompt();
+      return;
+    }
+    if (input === '.duo') {
+      console.log('duo(input) { mike: fn  el: fn }');
+      console.log('mike runs first (Atlanta). el responds (Brooklyn).');
+      console.log('Both branches required. Compiles to: el(mike(input))');
       rl.prompt();
       return;
     }
