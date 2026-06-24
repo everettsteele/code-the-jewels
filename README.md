@@ -183,4 +183,4 @@ See the `examples/` directory:
 
 ## License
 
-MIT. Free, like every RTJ album. Part of [Meridian](https://neverstill.llc).
+MIT. Free, like every RTJ album. Part of [Meridian](https://meridianbasehq.com).
