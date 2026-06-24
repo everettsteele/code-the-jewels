@@ -9,14 +9,21 @@
   "scripts": {
     "build": "tsc",
     "dev": "ts-node src/cli.ts",
-    "test": "node dist/tests/basic.test.js"
+    "test": "node dist/tests/basic.test.js",
+    "deploy": "wrangler deploy",
+    "preview": "wrangler dev"
   },
-  "keywords": ["rtj", "code-the-jewels", "programming-language"],
+  "keywords": [
+    "rtj",
+    "code-the-jewels",
+    "programming-language"
+  ],
   "license": "MIT",
   "type": "commonjs",
   "devDependencies": {
     "@types/node": "^25.5.0",
     "ts-node": "^10.9.2",
-    "typescript": "^6.0.2"
+    "typescript": "^6.0.2",
+    "wrangler": "^4.104.0"
   }
 }
